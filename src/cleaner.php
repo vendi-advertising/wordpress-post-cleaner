@@ -11,7 +11,7 @@ class cleaner extends \WP_CLI_Command
     {
         $args = [
                     'posts_per_page'   => -1,
-                    'post_type'        => 'post',
+                    'post_type'        => 'page',
                     'post_status'      => 'publish',
                     'suppress_filters' => true ,
         ];
@@ -44,7 +44,7 @@ class cleaner extends \WP_CLI_Command
 
             if( $before !== $after_3 )
             {
-                echo sprintf( "Updating post %1$s\n", $post->ID );
+                echo sprintf( 'Updating post %1$s', $post->ID ) . "\n";
 
                 wp_update_post(
                                 [
