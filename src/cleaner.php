@@ -7,11 +7,54 @@ use Sunra\PhpSimple\HtmlDomParser;
 class cleaner extends \WP_CLI_Command
 {
 
+    public function strip_div()
+    {
+        $args = [
+                    'posts_per_page'   => -1,
+                    'post_type'        => 'post',
+                    'post_status'      => 'publish',
+                    'suppress_filters' => true ,
+        ];
+
+        $posts = get_posts( $args );
+
+        foreach( $posts as $post )
+        {
+            $before = $post->post_content;
+
+            if( strpos( $before, '<div>') === 0 )
+            {
+
+                $after = preg_replace(
+                                        '/' .
+                                        preg_quote( '<div>', '/' ) .
+                                        '(.*?)' .
+                                        preg_quote( '</div>', '/' ) .
+                                        '/',
+                                        '$1',
+                                        $before
+                                    );
+
+                if( $before !== $after )
+                {
+                    echo sprintf( 'Updating post %1$s', $post->ID ) . "\n";
+
+                        wp_update_post(
+                                        [
+                                          'ID'           => $post->ID,
+                                          'post_content' => $after,
+                                        ]
+                        );
+                }
+            }
+        }
+    }
+
     public function clean()
     {
         $args = [
                     'posts_per_page'   => -1,
-                    'post_type'        => 'page',
+                    'post_type'        => 'post',
                     'post_status'      => 'publish',
                     'suppress_filters' => true ,
         ];
@@ -40,7 +83,7 @@ class cleaner extends \WP_CLI_Command
             $after_2 = str_replace( '<span>', '', $after );
             $after_2 = str_replace( '</span>', '', $after_2 );
 
-            $after_3 = \Patchwork\Utf8::toAscii( $after_2, '' ) ;
+            $after_3 = \Patchwork\Utf8::toAscii( $after_2, '' );
 
             if( $before !== $after_3 )
             {
