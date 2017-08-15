@@ -27,7 +27,7 @@ class cleaner extends \WP_CLI_Command
                 $after = preg_replace(
                                         '/' .
                                         preg_quote( '<div>', '/' ) .
-                                        '(.*?)' .
+                                        '([^<]*)' .
                                         preg_quote( '</div>', '/' ) .
                                         '/',
                                         '$1',
