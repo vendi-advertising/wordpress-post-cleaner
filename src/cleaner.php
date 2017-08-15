@@ -22,9 +22,8 @@ class cleaner extends \WP_CLI_Command
         {
             $before = $post->post_content;
 
-            if( strpos( $before, '<div>') === 0 )
+            while( true )
             {
-
                 $after = preg_replace(
                                         '/' .
                                         preg_quote( '<div>', '/' ) .
@@ -35,17 +34,19 @@ class cleaner extends \WP_CLI_Command
                                         $before
                                     );
 
-                if( $before !== $after )
+                if( $before === $after )
                 {
-                    echo sprintf( 'Updating post %1$s', $post->ID ) . "\n";
-
-                        wp_update_post(
-                                        [
-                                          'ID'           => $post->ID,
-                                          'post_content' => $after,
-                                        ]
-                        );
+                    break;
                 }
+
+                echo sprintf( 'Updating post %1$s', $post->ID ) . "\n";
+
+                wp_update_post(
+                                [
+                                  'ID'           => $post->ID,
+                                  'post_content' => $after,
+                                ]
+                );
             }
         }
     }
