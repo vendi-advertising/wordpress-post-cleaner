@@ -47,6 +47,8 @@ class cleaner extends \WP_CLI_Command
                                   'post_content' => $after,
                                 ]
                 );
+
+                $before = $after;
             }
         }
     }
