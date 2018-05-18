@@ -1,0 +1,4 @@
+path: /var/www/character-lives-primary-site/stage/wp-site/
+url: https://example.com
+require:
+  - ./wordpress-post-cleaner.php

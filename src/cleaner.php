@@ -4,8 +4,39 @@ namespace Vendi\WordPressPostCleaner;
 
 use Sunra\PhpSimple\HtmlDomParser;
 
+/**
+ * Clean up posts when migrating to new system.
+ */
 class cleaner extends \WP_CLI_Command
 {
+
+    /**
+     * @subcommand get-urls
+     */
+    public function get_urls()
+    {
+        $all_post_types = \get_post_types();
+        unset($all_post_types['attachment']);
+        unset($all_post_types['customize_changeset']);
+        unset($all_post_types['custom_css']);
+
+        $args = [
+                    'posts_per_page'   => -1,
+                    'post_type'        => $all_post_types,
+                    'post_status'      => 'publish',
+                    'suppress_filters' => true ,
+        ];
+
+        $posts = get_posts( $args );
+
+        $extended = [];
+
+        foreach($posts as $post){
+            $extended[] = new WP_Post_Extended($post);
+        }
+
+        dump($extended);
+    }
 
     public function clean()
     {
